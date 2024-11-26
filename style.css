@@ -19,6 +19,8 @@ body {
     flex-direction: row;
     max-width: 2000px;
     margin: 0 auto;
+    padding: var(--padding-medium);
+    gap: var(--padding-medium);
 }
 
 .controls {
@@ -28,6 +30,7 @@ body {
     padding: var(--padding-medium);
     box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
     flex-shrink: 0;
+    height: fit-content;
 }
 
 .controls h1 {
@@ -66,6 +69,8 @@ body {
     background: #fff;
     flex-grow: 1;
     max-width: calc(1.6 * var(--controls-width));
+    height: var(--controls-height);
+    box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
 }
 
 canvas {
@@ -164,6 +169,8 @@ canvas {
 @media screen and (max-width: 768px) {
     .container {
         flex-direction: column;
+        padding: var(--padding-small);
+        gap: var(--padding-small);
     }
     
     .controls, .chart-container {
@@ -173,7 +180,7 @@ canvas {
     }
     
     .chart-container {
-        height: min(400px, calc(1.6 * var(--controls-width)));
+        height: 400px;
     }
 }
 
