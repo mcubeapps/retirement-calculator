@@ -10,14 +10,18 @@ function debugLog(message, data = null) {
 
 // Configuration object
 const CONFIG = {
-    updateDelay: 250,
-    mobileBreakpoint: 768,
-    defaultHeight: 400,
-    currencyFormat: new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        maximumFractionDigits: 0
-    })
+    updateDelay: 100,
+    defaultCurrency: 'USD',
+    currencyFormats: {
+        USD: { locale: 'en-US', currency: 'USD', symbol: '$' },
+        EUR: { locale: 'de-DE', currency: 'EUR', symbol: '€' },
+        GBP: { locale: 'en-GB', currency: 'GBP', symbol: '£' },
+        JPY: { locale: 'ja-JP', currency: 'JPY', symbol: '¥' },
+        CAD: { locale: 'en-CA', currency: 'CAD', symbol: 'C$' },
+        AUD: { locale: 'en-AU', currency: 'AUD', symbol: 'A$' },
+        CNY: { locale: 'zh-CN', currency: 'CNY', symbol: '¥' },
+        INR: { locale: 'en-IN', currency: 'INR', symbol: '₹' }
+    }
 };
 
 // Global variables
@@ -27,6 +31,15 @@ let retirementAge = 65;
 let currentPortfolio = 50000;
 let monthlyContribution = 500;
 let annualReturn = 0.07;
+let currentCurrency = CONFIG.defaultCurrency;
+let currencyFormatter = new Intl.NumberFormat(
+    CONFIG.currencyFormats[CONFIG.defaultCurrency].locale,
+    {
+        style: 'currency',
+        currency: CONFIG.defaultCurrency,
+        maximumFractionDigits: 0
+    }
+);
 
 // Function to calculate portfolio growth
 function calculatePortfolioGrowth() {
@@ -62,6 +75,8 @@ function updateChart(data) {
             chart.destroy();
         }
 
+        const currencySymbol = CONFIG.currencyFormats[currentCurrency].symbol;
+
         chart = new Chart(ctx, {
             type: 'line',
             data: {
@@ -80,15 +95,31 @@ function updateChart(data) {
                 scales: {
                     y: {
                         beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: `Portfolio Value (${currencySymbol})`
+                        },
                         ticks: {
-                            callback: value => CONFIG.currencyFormat.format(value)
+                            callback: value => currencyFormatter.format(value)
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Age'
                         }
                     }
                 },
                 plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top'
+                    tooltip: {
+                        callbacks: {
+                            label: context => {
+                                return [
+                                    `Portfolio Value: ${currencyFormatter.format(context.raw)}`,
+                                    `Return Rate: ${(annualReturn * 100).toFixed(1)}%`
+                                ];
+                            }
+                        }
                     }
                 }
             }
@@ -220,4 +251,124 @@ function validateCSS() {
     });
     
     return controlsWidth && controlsHeight;
+}
+
+// Update the updateValue function to automatically trigger chart update
+function updateValue(id) {
+    const input = document.getElementById(id);
+    let value = parseFloat(input.value);
+    
+    // Input validation
+    if (isNaN(value)) {
+        value = parseFloat(input.min);
+        input.value = value;
+    }
+    
+    // Enforce min/max bounds
+    value = Math.max(parseFloat(input.min), Math.min(parseFloat(input.max), value));
+    
+    // Format display value based on input type
+    let displayValue;
+    switch(id) {
+        case 'currentPortfolio':
+        case 'monthlyContribution':
+            displayValue = currencyFormatter.format(value);
+            break;
+        case 'annualReturn':
+            displayValue = `${value}%`;
+            break;
+        default:
+            displayValue = value;
+    }
+    
+    document.getElementById(id + 'Value').textContent = displayValue;
+    
+    // Update global variables
+    switch(id) {
+        case 'currentAge':
+            if (value >= retirementAge) {
+                alert('Current age must be less than retirement age');
+                return;
+            }
+            currentAge = value;
+            break;
+        case 'retirementAge':
+            if (value <= currentAge) {
+                alert('Retirement age must be greater than current age');
+                return;
+            }
+            retirementAge = value;
+            break;
+        case 'currentPortfolio':
+            currentPortfolio = value;
+            break;
+        case 'monthlyContribution':
+            monthlyContribution = value;
+            break;
+        case 'annualReturn':
+            annualReturn = value / 100;
+            break;
+    }
+    
+    // Automatically update the chart with debouncing
+    debouncedCalculateGrowth();
+}
+
+// Create a debounced version of calculatePortfolioGrowth
+const debouncedCalculateGrowth = debounce(() => {
+    calculatePortfolioGrowth();
+}, 100); // 100ms delay for smooth updates
+
+// Remove the Calculate button from HTML since it's no longer needed
+
+// Function to update currency
+function updateCurrency(currency) {
+    currentCurrency = currency;
+    currencyFormatter = new Intl.NumberFormat(
+        CONFIG.currencyFormats[currency].locale,
+        {
+            style: 'currency',
+            currency: currency,
+            maximumFractionDigits: 0
+        }
+    );
+
+    // Update displayed values
+    updateDisplayedValues();
+    
+    // Update chart
+    if (chart) {
+        updateChartCurrency();
+    }
+}
+
+// Function to update displayed values
+function updateDisplayedValues() {
+    // Update portfolio value display
+    const portfolioValue = document.getElementById('currentPortfolioValue');
+    if (portfolioValue) {
+        portfolioValue.textContent = currencyFormatter.format(currentPortfolio);
+    }
+
+    // Update monthly contribution display
+    const contributionValue = document.getElementById('monthlyContributionValue');
+    if (contributionValue) {
+        contributionValue.textContent = currencyFormatter.format(monthlyContribution);
+    }
+}
+
+// Function to update chart with new currency
+function updateChartCurrency() {
+    const currencySymbol = CONFIG.currencyFormats[currentCurrency].symbol;
+    
+    chart.options.scales.y.title.text = `Portfolio Value (${currencySymbol})`;
+    chart.options.scales.y.ticks.callback = value => currencyFormatter.format(value);
+    chart.options.plugins.tooltip.callbacks.label = context => {
+        return [
+            `Portfolio Value: ${currencyFormatter.format(context.raw)}`,
+            `Return Rate: ${(annualReturn * 100).toFixed(1)}%`
+        ];
+    };
+    
+    chart.update();
 }
