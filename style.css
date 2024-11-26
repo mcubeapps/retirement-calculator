@@ -1,9 +1,7 @@
 :root {
     --padding-small: 1rem;
     --padding-medium: 1.5rem;
-    --bg-color: #f4f7fa; /* Light blue-grey background */
-    --card-bg: #ffffff;
-    --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    --padding-large: 2rem;
 }
 
 body {
@@ -11,7 +9,23 @@ body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
-    background-color: var(--bg-color);
+    background-image: url('images/beach-background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(2px);
+    z-index: 0;
 }
 
 .container {
@@ -30,9 +44,11 @@ body {
 .controls {
     width: 30%;
     min-width: 300px;
-    background: var(--card-bg);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
     border-radius: 12px;
-    box-shadow: var(--shadow);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     padding: var(--padding-medium);
     flex-shrink: 0;
     height: fit-content;
@@ -72,9 +88,11 @@ body {
 .chart-container {
     width: calc(1.5 * var(--controls-width, 300px));
     padding: var(--padding-medium);
-    background: var(--card-bg);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
     border-radius: 12px;
-    box-shadow: var(--shadow);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     flex-grow: 0;
     flex-shrink: 0;
     height: calc(0.9 * var(--controls-height, 400px));
