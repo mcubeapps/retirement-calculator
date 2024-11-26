@@ -21,6 +21,7 @@ body {
     margin: 0 auto;
     padding: var(--padding-medium);
     gap: var(--padding-medium);
+    position: relative;
 }
 
 .controls {
@@ -31,6 +32,7 @@ body {
     box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
     flex-shrink: 0;
     height: fit-content;
+    position: relative;
 }
 
 .controls h1 {
@@ -64,13 +66,14 @@ body {
 }
 
 .chart-container {
-    width: calc(1.5 * var(--controls-width));
+    width: calc(1.5 * var(--controls-width, 300px));
     padding: var(--padding-medium);
     background: #fff;
     flex-grow: 0;
     flex-shrink: 0;
-    height: calc(0.8 * var(--controls-height));
+    height: calc(0.9 * var(--controls-height, 400px));
     box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
+    position: relative;
 }
 
 canvas {
@@ -286,4 +289,28 @@ input[type="range"]::-moz-range-thumb:hover {
         padding: 0.6rem;
         font-size: 0.9rem;
     }
+}
+
+/* Debug outline for development */
+.debug * {
+    outline: 1px solid rgba(255, 0, 0, 0.1);
+}
+
+/* Debug info overlay */
+.debug-info {
+    display: none;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 10px;
+    border-radius: 4px;
+    font-family: monospace;
+    z-index: 9999;
+}
+
+/* Show debug info when debug mode is active */
+.debug .debug-info {
+    display: block;
 }
