@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Calculate your retirement savings growth over time">
+    <title>Retirement Calculator</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Left Side: Controls -->
+        <div class="controls" role="form" aria-label="Retirement Calculator Inputs">
+            <h1>Retirement Calculator</h1>
+            
+            <div class="input-group">
+                <label for="currencySelect">Currency</label>
+                <select id="currencySelect" class="currency-select" onchange="updateCurrency(this.value)">
+                    <option value="USD">US Dollar ($)</option>
+                    <option value="EUR">Euro (€)</option>
+                    <option value="GBP">British Pound (£)</option>
+                    <option value="JPY">Japanese Yen (¥)</option>
+                    <option value="CAD">Canadian Dollar (C$)</option>
+                    <option value="AUD">Australian Dollar (A$)</option>
+                    <option value="CNY">Chinese Yuan (¥)</option>
+                    <option value="INR">Indian Rupee (₹)</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label for="currentAge">Current Age</label>
+                <div class="slider-container">
+                    <input 
+                        type="range" 
+                        id="currentAge" 
+                        min="18" 
+                        max="80" 
+                        value="30" 
+                        oninput="updateValue('currentAge')"
+                        aria-valuemin="18"
+                        aria-valuemax="80"
+                        aria-valuenow="30"
+                    >
+                    <span id="currentAgeValue" class="value-display">30</span>
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label for="retirementAge">Retirement Age</label>
+                <div class="slider-container">
+                    <input 
+                        type="range" 
+                        id="retirementAge" 
+                        min="35" 
+                        max="90" 
+                        value="65" 
+                        oninput="updateValue('retirementAge')"
+                        aria-valuemin="35"
+                        aria-valuemax="90"
+                        aria-valuenow="65"
+                    >
+                    <span id="retirementAgeValue" class="value-display">65</span>
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label for="currentPortfolio">Current Portfolio</label>
+                <div class="slider-container">
+                    <input 
+                        type="range" 
+                        id="currentPortfolio" 
+                        min="0" 
+                        max="10000000" 
+                        step="10000" 
+                        value="50000" 
+                        oninput="updateValue('currentPortfolio')"
+                        aria-valuemin="0"
+                        aria-valuemax="10000000"
+                        aria-valuenow="50000"
+                    >
+                    <span id="currentPortfolioValue" class="value-display">$50,000</span>
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label for="monthlyContribution">Monthly Contributions</label>
+                <div class="slider-container">
+                    <input 
+                        type="range" 
+                        id="monthlyContribution" 
+                        min="0" 
+                        max="10000" 
+                        step="100" 
+                        value="500" 
+                        oninput="updateValue('monthlyContribution')"
+                        aria-valuemin="0"
+                        aria-valuemax="10000"
+                        aria-valuenow="500"
+                    >
+                    <span id="monthlyContributionValue" class="value-display">$500</span>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="annualReturn">Annual Return Rate (%)</label>
+                <div class="slider-container">
+                    <input 
+                        type="range" 
+                        id="annualReturn" 
+                        min="1" 
+                        max="15" 
+                        step="0.5" 
+                        value="7" 
+                        oninput="updateValue('annualReturn')"
+                        aria-valuemin="1"
+                        aria-valuemax="15"
+                        aria-valuenow="7"
+                    >
+                    <span id="annualReturnValue" class="value-display">7%</span>
+                </div>
+            </div>
+
+            <div class="assumptions">
+                <h2>Assumptions</h2>
+                <ul>
+                    <li>Returns are compounded annually</li>
+                    <li>Contributions are made monthly</li>
+                    <li>Values are not adjusted for inflation</li>
+                </ul>
+            </div>
+            
+            <button 
+                onclick="calculatePortfolioGrowth()"
+                class="calculate-btn"
+                aria-label="Calculate retirement growth"
+            >
+                Calculate
+            </button>
+        </div>
+
+        <!-- Right Side: Chart -->
+        <div class="chart-container" role="region" aria-label="Portfolio Growth Chart">
+            <canvas id="growthChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Add loading indicator -->
+    <div id="loadingIndicator" class="loading-indicator" style="display: none;">
+        Calculating...
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,283 @@
+:root {
+    --padding-small: 1rem;
+    --padding-medium: 1.5rem;
+    --padding-large: 2rem;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+    justify-content: flex-start;
+    flex-direction: row;
+    max-width: 2000px;
+    margin: 0 auto;
+}
+
+.controls {
+    width: 30%;
+    min-width: 300px;
+    background: #fff;
+    padding: var(--padding-medium);
+    box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+}
+
+.controls h1 {
+    font-size: 1.8rem;
+    margin-bottom: var(--padding-medium);
+    text-align: center;
+}
+
+.controls label {
+    display: block;
+    margin-top: 20px;
+}
+
+.controls input[type="range"] {
+    width: 100%;
+}
+
+.controls button {
+    display: block;
+    width: 100%;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #007bff;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+.controls button:hover {
+    background-color: #0056b3;
+}
+
+.chart-container {
+    width: min(70%, calc(1.6 * var(--controls-width)));
+    padding: var(--padding-medium);
+    background: #fff;
+    flex-grow: 1;
+    max-width: calc(1.6 * var(--controls-width));
+}
+
+canvas {
+    max-width: 100%;
+}
+
+.input-group {
+    margin-bottom: var(--padding-medium);
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.slider-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.slider-container input[type="range"] {
+    flex: 1;
+    min-width: 150px;
+}
+
+.value-display {
+    min-width: 80px;
+    text-align: right;
+    background: #f5f5f5;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    font-weight: 500;
+    font-family: monospace;
+}
+
+.assumptions {
+    margin: var(--padding-medium) 0;
+    padding: 1rem;
+    background: #f5f5f5;
+    border-radius: 4px;
+}
+
+.assumptions h2 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.assumptions ul {
+    margin: 0;
+    padding-left: 1.2rem;
+}
+
+.loading-indicator {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: var(--padding-small) var(--padding-medium);
+    border-radius: 4px;
+    z-index: 1000;
+    text-align: center;
+}
+
+.calculate-btn {
+    width: 100%;
+    padding: var(--padding-small);
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: background 0.3s;
+}
+
+.calculate-btn:hover {
+    background: #45a049;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 1024px) {
+    .controls {
+        width: 35%;
+    }
+    
+    .chart-container {
+        width: min(65%, calc(1.6 * var(--controls-width)));
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+    
+    .controls, .chart-container {
+        width: 100%;
+        max-width: 100%;
+        padding: var(--padding-small);
+    }
+    
+    .chart-container {
+        height: min(400px, calc(1.6 * var(--controls-width)));
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .slider-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+    
+    .value-display {
+        text-align: center;
+        width: 100%;
+    }
+    
+    .chart-container {
+        height: 300px;
+    }
+    
+    .assumptions {
+        margin: var(--padding-small) 0;
+    }
+    
+    .assumptions h2 {
+        font-size: 1rem;
+    }
+    
+    .assumptions ul {
+        font-size: 0.9rem;
+    }
+}
+
+/* Add these styles for better slider appearance */
+input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 8px;
+    border-radius: 4px;
+    background: #ddd;
+    outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #4CAF50;
+    cursor: pointer;
+    transition: background .15s ease-in-out;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border: 0;
+    border-radius: 50%;
+    background: #4CAF50;
+    cursor: pointer;
+    transition: background .15s ease-in-out;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+    background: #45a049;
+}
+
+input[type="range"]::-moz-range-thumb:hover {
+    background: #45a049;
+}
+
+/* Add these styles for the currency selector */
+.currency-select {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-bottom: var(--padding-medium);
+}
+
+.currency-select:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+}
+
+/* Add hover effect */
+.currency-select:hover {
+    border-color: #4CAF50;
+}
+
+/* Style for disabled state */
+.currency-select:disabled {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 480px) {
+    .currency-select {
+        padding: 0.6rem;
+        font-size: 0.9rem;
+    }
+}
