@@ -64,11 +64,10 @@ body {
 }
 
 .chart-container {
-    width: min(70%, calc(1.6 * var(--controls-width)));
+    width: 70%;
     padding: var(--padding-medium);
     background: #fff;
     flex-grow: 1;
-    max-width: calc(1.6 * var(--controls-width));
     height: var(--controls-height);
     box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
 }
@@ -162,7 +161,7 @@ canvas {
     }
     
     .chart-container {
-        width: min(65%, calc(1.6 * var(--controls-width)));
+        width: 65%;
     }
 }
 
@@ -175,7 +174,6 @@ canvas {
     
     .controls, .chart-container {
         width: 100%;
-        max-width: 100%;
         padding: var(--padding-small);
     }
     
