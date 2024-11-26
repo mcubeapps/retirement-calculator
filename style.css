@@ -64,11 +64,12 @@ body {
 }
 
 .chart-container {
-    width: 70%;
+    width: calc(1.5 * var(--controls-width));
     padding: var(--padding-medium);
     background: #fff;
-    flex-grow: 1;
-    height: var(--controls-height);
+    flex-grow: 0;
+    flex-shrink: 0;
+    height: calc(0.8 * var(--controls-height));
     box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
 }
 

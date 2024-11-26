@@ -205,93 +205,35 @@ function updateCurrency(currency) {
     calculatePortfolioGrowth();
 }
 
-// Update the control width/height function
+// Update the control dimensions function
 function updateControlDimensions() {
     const controls = document.querySelector('.controls');
     const controlsWidth = controls.offsetWidth;
     const controlsHeight = controls.offsetHeight;
     
-    document.documentElement.style.setProperty('--controls-width', controlsWidth + 'px');
-    document.documentElement.style.setProperty('--controls-height', controlsHeight + 'px');
-}
-
-// Update the chart options to maintain aspect ratio
-function updateChart(data) {
-    const labels = Array.from({length: data.length}, (_, i) => currentAge + i);
+    // Update CSS variables
+    document.documentElement.style.setProperty('--controls-width', `${controlsWidth}px`);
+    document.documentElement.style.setProperty('--controls-height', `${controlsHeight}px`);
     
-    if (chart) chart.destroy();
-
-    const ctx = document.getElementById('growthChart').getContext('2d');
-    chart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Portfolio Value Over Time',
-                data: data,
-                borderColor: 'rgba(75, 192, 192, 1)',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                fill: true,
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Age'
-                    }
-                },
-                y: {
-                    title: {
-                        display: true,
-                        text: `Portfolio Value (${CONFIG.currencyFormats[currentCurrency].symbol})`
-                    },
-                    beginAtZero: true,
-                    ticks: {
-                        callback: value => currencyFormatter.format(value)
-                    }
-                }
-            },
-            plugins: {
-                tooltip: {
-                    callbacks: {
-                        label: context => {
-                            return [
-                                `Portfolio Value: ${currencyFormatter.format(context.raw)}`,
-                                `Return Rate: ${CONFIG.percentFormat.format(annualReturn)}`
-                            ];
-                        }
-                    }
-                }
-            }
-        }
-    });
+    // Force chart resize if needed
+    if (chart) {
+        chart.resize();
+    }
 }
 
-// Update event listeners
-window.addEventListener('resize', debounce(() => {
-    updateControlDimensions();
-    if (chart) {
-        calculatePortfolioGrowth();
-    }
-}, 250));
-
-// Call on initial load
-window.addEventListener('load', () => {
-    updateControlDimensions();
-    calculatePortfolioGrowth();
-});
-
-// Add mutation observer to handle dynamic content changes
+// Add ResizeObserver for more accurate updates
 const resizeObserver = new ResizeObserver(debounce(() => {
     updateControlDimensions();
-    if (chart) {
-        calculatePortfolioGrowth();
-    }
 }, 250));
 
-// Observe the controls element for size changes
-resizeObserver.observe(document.querySelector('.controls'));
+// Start observing the controls element
+document.addEventListener('DOMContentLoaded', () => {
+    const controls = document.querySelector('.controls');
+    resizeObserver.observe(controls);
+    updateControlDimensions();
+});
+
+// Update window resize handler
+window.addEventListener('resize', debounce(() => {
+    updateControlDimensions();
+}, 250));
